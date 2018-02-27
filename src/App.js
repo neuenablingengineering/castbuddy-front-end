@@ -77,7 +77,7 @@ class App extends Component {
 
     let data = {
       x: 'x',
-      xFormat: '%Q',
+      xFormat: '%Y%M%d%H%M%S',
       rows: this.state.points,
       type: 'spline'
     };
