@@ -13,7 +13,7 @@ Moment.locale('en');
 momentLocalizer();
 simpleNumberLocalizer();
 
-let getApiRoot = 'http://cbapi-dev.us-east-1.elasticbeanstalk.com/api/';
+let getApiRoot = 'http://api.castbuddy.me/api/';
 
 class App extends Component {
   constructor(props) {
