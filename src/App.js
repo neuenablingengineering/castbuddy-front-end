@@ -3,7 +3,6 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'c3/c3.min.css';
 import 'react-widgets/dist/css/react-widgets.css';
-//import C3Chart from 'react-c3js';
 import c3 from 'c3';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';

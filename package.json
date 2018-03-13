@@ -11,7 +11,6 @@
     "node-fetch": "^2.0.0",
     "popper.js": "^1.12.9",
     "react": "^16.2.0",
-    "react-c3js": "^0.1.20",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1",
     "react-widgets": "^4.2.0",
