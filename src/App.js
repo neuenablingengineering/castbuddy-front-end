@@ -13,7 +13,7 @@ Moment.locale('en');
 momentLocalizer();
 simpleNumberLocalizer();
 
-let getApiRoot = '/api/api/';
+let getApiRoot = '/api/';
 
 class App extends Component {
   constructor(props) {
