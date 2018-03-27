@@ -13,7 +13,7 @@ Moment.locale('en');
 momentLocalizer();
 simpleNumberLocalizer();
 
-let getApiRoot = 'http://api.castbuddy.me/api/';
+let getApiRoot = '/api/api/';
 
 class App extends Component {
   constructor(props) {
@@ -328,11 +328,12 @@ function parseMessage(data) {
 }
 
 function getDataFromApi(cast, start, end) {
-  let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+  //let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
   let targetUrl = `${getApiRoot}data/select?chip=${cast}&start=${start}&end=${end}`;
   let req = new XMLHttpRequest();
 
-  req.open('GET', proxyUrl + targetUrl, false);
+  //req.open('GET', proxyUrl + targetUrl, false);
+  req.open('GET', targetUrl, false);
   req.send(null);
   return JSON.parse(req.responseText);
 }
