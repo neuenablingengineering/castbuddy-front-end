@@ -199,7 +199,7 @@ class App extends Component {
       this.chart.load({rows: this.state.points});
     }
   }
-  
+
   render() {
     // Only re-render chart when necessary
     if (this.dataUpdate) {
@@ -296,7 +296,14 @@ function SensorListItem(props) {
 
 function getCasts() {
   let casts = ['Cast1','FAUB_AR1'];
-  return casts;
+  let proxyUrl = 'http://localhost:5000';
+  let targetUrl = `${getApiRoot}chip/select/all`;
+  let req = new XMLHttpRequest();
+  console.log(req);
+  req.open('GET', proxyUrl + targetUrl, false);
+  //req.open('GET', targetUrl, false);
+  req.send(null);
+  return JSON.parse(req.responseText);
 }
 
 function getDefaultCast() {
@@ -306,7 +313,7 @@ function getDefaultCast() {
 
 function parseMessage(data) {
   let vals = [];
-  
+
   // assembling an array that looks like:
   //   [
   //     ['x',       's1', 's2', ...],
@@ -316,24 +323,24 @@ function parseMessage(data) {
   //      .
   //      .
   //   ]
-  
+
   if(data.length !== 0) {
     vals.push(['x','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16']);
     data.forEach(function(ct) {
       vals.push([ct.t].concat(ct.v));
     });
   }
-  
+
   return vals;
 }
 
 function getDataFromApi(cast, start, end) {
-  //let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+  let proxyUrl = 'http://localhost:5000';
   let targetUrl = `${getApiRoot}data/select?chip=${cast}&start=${start}&end=${end}`;
   let req = new XMLHttpRequest();
-
-  //req.open('GET', proxyUrl + targetUrl, false);
-  req.open('GET', targetUrl, false);
+  console.log(req);
+  req.open('GET', proxyUrl + targetUrl, false);
+  //req.open('GET', targetUrl, false);
   req.send(null);
   return JSON.parse(req.responseText);
 }
