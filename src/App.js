@@ -295,13 +295,10 @@ function SensorListItem(props) {
 }
 
 function getCasts() {
-  let casts = ['Cast1','FAUB_AR1'];
-  let proxyUrl = 'http://localhost:5000';
   let targetUrl = `${getApiRoot}chip/select/all`;
   let req = new XMLHttpRequest();
-  console.log(req);
-  req.open('GET', proxyUrl + targetUrl, false);
-  //req.open('GET', targetUrl, false);
+  //console.log(req);
+  req.open('GET', targetUrl, false);
   req.send(null);
   return JSON.parse(req.responseText);
 }
@@ -335,12 +332,10 @@ function parseMessage(data) {
 }
 
 function getDataFromApi(cast, start, end) {
-  let proxyUrl = 'http://localhost:5000';
   let targetUrl = `${getApiRoot}data/select?chip=${cast}&start=${start}&end=${end}`;
   let req = new XMLHttpRequest();
-  console.log(req);
-  req.open('GET', proxyUrl + targetUrl, false);
-  //req.open('GET', targetUrl, false);
+  //console.log(req);
+  req.open('GET', targetUrl, false);
   req.send(null);
   return JSON.parse(req.responseText);
 }

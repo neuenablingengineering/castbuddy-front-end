@@ -36,5 +36,6 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/castbuddy/user-interface#readme"
+  "homepage": "https://bitbucket.org/castbuddy/user-interface#readme",
+  "proxy": "http://127.0.0.1:5000"
 }
