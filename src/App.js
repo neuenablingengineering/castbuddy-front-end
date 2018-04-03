@@ -1,19 +1,30 @@
-import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'c3/c3.min.css';
 import 'react-widgets/dist/css/react-widgets.css';
+import 'bootstrap';
+import React, { Component } from 'react';
 import c3 from 'c3';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import simpleNumberLocalizer from 'react-widgets-simple-number';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import Pusher from 'pusher-js';
 
 Moment.locale('en');
 momentLocalizer();
 simpleNumberLocalizer();
 
 let getApiRoot = '/api/';
+
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = true;
+
+const pusher = new Pusher('d9cc11a3fe140178060c', {
+  encrypted: true
+});
+
+const channel = pusher.subscribe('data');
 
 class App extends Component {
   constructor(props) {
@@ -42,13 +53,16 @@ class App extends Component {
     let points = parseMessage(getData);
     //console.log(getData);
 
+    channel.bind('new-data', data => this.alertNewData(data.message));
+
     this.state = {
-      selectedCast: selectedCast,
+      selectedCast: casts[1],
       casts: casts,
       points: points,
       startTime: startTime,
       endTime: endTime,
-      selectedSensors: selectedSensors
+      selectedSensors: selectedSensors,
+      alerts: []
     };
 
     // Flag used for managing chart redraws
@@ -56,6 +70,45 @@ class App extends Component {
   }
 
   /* Callback Functions */
+
+  alertNewData(cast) {
+    let newAlerts = [<NewDataAlert key="1" cast={cast} onClick={() => this.reloadFromAlert(cast)} />];
+
+    this.setState(
+      {
+        alerts: newAlerts
+      }
+    );
+  }
+
+  reloadFromAlert(cast) {
+    //console.log('Reloading data for cast ' + cast);
+
+    // Set flag for chart to be redrawn
+    this.dataUpdate = true;
+
+    // re-initialize dates
+    let endTime = new Date();
+    let startTime = new Date();
+    let startMonth = startTime.getMonth();
+    startTime.setMonth(startMonth - 1);       // one month before today
+
+    // load data
+    let startTimeString = Moment(startTime).format('YYYYMMDDHHmmss');
+    let endTimeString = Moment(endTime).format('YYYYMMDDHHmmss');
+    let getData = getDataFromApi(cast, startTimeString, endTimeString);
+
+    // set state, including changing cast and clearing alert
+    this.setState(
+      {
+        selectedCast: cast,
+        startTime: startTime,
+        endTime: endTime,
+        points: parseMessage(getData),
+        alerts: []
+      }
+    );
+  }
 
   loadNewData() {
     // Set flag for chart to be redrawn
@@ -68,6 +121,8 @@ class App extends Component {
     let newState = {
       points: parseMessage(apiData)
     };
+
+    //console.log("Loaded new data");
 
     this.setState(newState);
   }
@@ -215,8 +270,7 @@ class App extends Component {
           <div className="col-3">
             <CastSelectMenu casts={this.state.casts} value={this.state.selectedCast} onChange={event => this.processCastChange(event)} />
           </div>
-          <div className="col-1 text-right">Status:</div>
-          <div className="col text-success">All Good</div>
+          <div className="col">{this.state.alerts}</div>
         </div>
         <div className="row pt-3">
           <div className="col-3">
@@ -270,6 +324,15 @@ class App extends Component {
 }
 
 export default App;
+
+function NewDataAlert(props) {
+  return (
+    <div className="alert alert-primary align-middle" role="alert">
+      New data is available for cast {props.cast}
+      <button type="button" className="btn py-0 btn-outline-primary btn-sm float-right" onClick={props.onClick}>Reload</button>
+    </div>
+  );
+}
 
 function CastSelectMenu(props) {
   let elements = [];
