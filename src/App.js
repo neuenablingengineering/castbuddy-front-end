@@ -37,8 +37,8 @@ class App extends Component {
     // initialize dates
     let endTime = new Date();
     let startTime = new Date();
-    let startMonth = startTime.getMonth();
-    startTime.setMonth(startMonth - 1);       // one month before today
+    let startDate = startTime.getDate();
+    startTime.setDate(startDate - 1);       // last 24 hours
 
     // initialize selected sensors
     let selectedSensors = [];
@@ -56,7 +56,7 @@ class App extends Component {
     channel.bind('new-data', data => this.alertNewData(data.message));
 
     this.state = {
-      selectedCast: casts[1],
+      selectedCast: casts[0],
       casts: casts,
       points: points,
       startTime: startTime,
@@ -72,7 +72,8 @@ class App extends Component {
   /* Callback Functions */
 
   alertNewData(cast) {
-    let newAlerts = [<NewDataAlert key="1" cast={cast} onClick={() => this.reloadFromAlert(cast)} />];
+    let newAlerts = this.state.alerts;
+    newAlerts.push([<NewDataAlert key="1" cast={cast} onClick={() => this.reloadFromAlert(cast)} />]);
 
     this.setState(
       {
@@ -87,21 +88,28 @@ class App extends Component {
     // Set flag for chart to be redrawn
     this.dataUpdate = true;
 
+    // Make sure cast is part of cast list
+    let newCasts = this.state.casts;
+    if (newCasts.indexOf(cast, 0) === -1) {
+      newCasts.push(cast);
+    }
+
     // re-initialize dates
     let endTime = new Date();
     let startTime = new Date();
-    let startMonth = startTime.getMonth();
-    startTime.setMonth(startMonth - 1);       // one month before today
+    let startDate = startTime.getDate();
+    startTime.setDate(startDate - 1);       // last 24 hours
 
     // load data
     let startTimeString = Moment(startTime).format('YYYYMMDDHHmmss');
     let endTimeString = Moment(endTime).format('YYYYMMDDHHmmss');
     let getData = getDataFromApi(cast, startTimeString, endTimeString);
 
-    // set state, including changing cast and clearing alert
+    // set state, including changing cast and clearing alerts
     this.setState(
       {
         selectedCast: cast,
+        casts: newCasts,
         startTime: startTime,
         endTime: endTime,
         points: parseMessage(getData),
@@ -230,7 +238,7 @@ class App extends Component {
       x: {
         type: 'timeseries',
         tick: {
-          format: '%Y-%m-%d %H:%M:%S'
+          format: '%d %b %Y %I:%M:%S%p'
         }
       }
     };
