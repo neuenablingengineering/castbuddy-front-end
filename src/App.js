@@ -37,8 +37,10 @@ class App extends Component {
     // initialize dates
     let endTime = new Date();
     let startTime = new Date();
-    let startDate = startTime.getDate();
-    startTime.setDate(startDate - 1);       // last 24 hours
+    //let startDate = startTime.getDate();
+    let startMin = startTime.getMinutes();
+    //startTime.setDate(startDate - 1);       // last 24 hours
+    startTime.setMinutes(startMin - 15);      // last 15 min
 
     // initialize selected sensors
     let selectedSensors = [];
@@ -53,10 +55,10 @@ class App extends Component {
     let points = parseMessage(getData);
     //console.log(getData);
 
-    channel.bind('new-data', data => this.alertNewData(data.message));
+    channel.bind('new-data', () => this.reloadPage());
 
     this.state = {
-      selectedCast: casts[0],
+      selectedCast: 'Cast-RISE',
       casts: casts,
       points: points,
       startTime: startTime,
@@ -73,13 +75,17 @@ class App extends Component {
 
   alertNewData(cast) {
     let newAlerts = this.state.alerts;
-    newAlerts.push([<NewDataAlert key="1" cast={cast} onClick={() => this.reloadFromAlert(cast)} />]);
+    newAlerts.push([<NewDataAlert key="1" cast={cast} onClick={() => this.reloadPage()} />]);
 
     this.setState(
       {
         alerts: newAlerts
       }
     );
+  }
+
+  reloadPage() {
+    window.location.reload(true);
   }
 
   reloadFromAlert(cast) {
@@ -97,8 +103,10 @@ class App extends Component {
     // re-initialize dates
     let endTime = new Date();
     let startTime = new Date();
-    let startDate = startTime.getDate();
-    startTime.setDate(startDate - 1);       // last 24 hours
+    //let startDate = startTime.getDate();
+    let startMin = startTime.getMinutes();
+    //startTime.setDate(startDate - 1);       // last 24 hours
+    startTime.setMinutes(startMin - 15);      // last 15 min
 
     // load data
     let startTimeString = Moment(startTime).format('YYYYMMDDHHmmss');
@@ -230,7 +238,7 @@ class App extends Component {
       x: 'x',
       xFormat: '%Y%M%d%H%M%S',
       rows: this.state.points,
-      type: 'spline',
+      //type: 'spline',
       hide: this.getHideMatrix()
     };
 
