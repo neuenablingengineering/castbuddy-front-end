@@ -55,7 +55,7 @@ class App extends Component {
     let points = parseMessage(getData);
     //console.log(getData);
 
-    channel.bind('new-data', () => this.reloadPage());
+    channel.bind('new-data', data => this.alertNewData(data.message));
 
     this.state = {
       selectedCast: 'Cast-RISE',
