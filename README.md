@@ -34,7 +34,7 @@ Note that the development build is not optimized.
 To create a production build, use npm run build.
 ```
 
-Whenever you're ready to run this app on a server 'for real', running `npm run build` will package the app into a flat folder called "build" that can be served as static files. You can do this step locally or on a build server then zip up this file for delivery to a deploy server, or, as we did for the sake of time, just install git and npm on your deploy server, clone the repo, and run `npm i && npm run build` in the repo root on the server itself. You can then serve the contents of the build folder however you'd like. Some options include:
+Whenever you're ready to run this app on a server "for real", running `npm run build` will package the app into a flat folder called "build" that can be served as static files. You can do this step locally or on a build server then zip up this folder for delivery to a deploy server, or, as we did for the sake of time, just install git and npm on your deploy server, clone the repo, and run `npm i && npm run build` in the repo root on the server itself. You can then serve the contents of the build folder however you'd like. Some options include:
 
 1. Using a static web server like nginx (what we did, because we also used nginx for reverse proxy routes).
 1. Use a production-ready node server like nodemon.
