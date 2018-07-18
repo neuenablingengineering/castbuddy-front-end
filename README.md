@@ -20,7 +20,10 @@ Getting started with the node framework is simple:
 
 Make any changes you'd like to the code. To test the app:
 
-1. You need an instance of the [CastBuddy API](https://github.com/neuenablingengineering/castbuddy-api) running locally, as this app makes calls to localhost/api. Go clone that repo and get an instance running first.
+1. Duplicate the file .env.default and rename it to just .env.
+1. You need an instance of the CastBuddy API running somewhere, either a local dev copy or a production version on a server. Head over to [that repo](https://bitbucket.org/faucherb94/castbuddyapi) and follow the steps to set up one or the other.
+  1. For a local dev copy: In .env, leave `REACT_APP_CB_API_ROOT` set to the default value of http://localhost:5000/api/.
+  1. For a server instance: In .env, set `REACT_APP_CB_API_ROOT` to the api's URL, including `/api/` at the end.
 1. In this repo's root run `npm start`. Node should open a web browser for you to http://localhost:3000/.
 
 You can continue to make code changes while the dev server is running and node will automatically reload the code in browser.
@@ -39,11 +42,20 @@ Whenever you're ready to run this app on a server "for real", running `npm run b
 1. Using a static web server like nginx (what we did, because we also used nginx for reverse proxy routes).
 1. Use a production-ready node server like nodemon.
 
+However you choose to deploy the app, prior to running `npm run build`, like when doing development, make sure there's a .env file in the root of the repo that defines `REACT_APP_CB_API_ROOT` correctly. For deployment, you of course cannot use localhost since the app is being accessed by remote clients.
+
+1. The API can be hosted independendly of the UI, just like for development. In this case, set `REACT_APP_CB_API_ROOT` to the full URL of the API, including `/api/` at the end.
+1. Both API and UI can be hosted on the same server easily, just create a reverse proxy so that whateverurl.com/api correctly accesses whatever port the API is being served on (after following [the steps for deployment in the API's readme](https://bitbucket.org/faucher94/castbuddyapi)). In this case, set `REACT_APP_CB_API_ROOT` to just /api/.
+
+Only after the .env file has been setup correctly should you run `npm run build`. .env must be setup first because once the react app is compiled, the environment variables it defines become statically defined.
+
 ## Project Structure
 
-A quick look at this repo will reveal this web app is very simple; it's only a single page. index.js is the entrypoint; all this file does is create an instance of App.js.
+A quick look at this repo will reveal this web app is very simple; it's only a single page.
 
-App.js is a straightforward React app with JavaScript functions supporting it. When loaded, it defaults the selected cast to the first one in the list received from the back-end API. It then gets the last 15min worth of data for the selected cast.
+**index.js** is the entrypoint; all this file does is create an instance of App.js.
+
+**App.js** is a straightforward React app with JavaScript functions supporting it. When loaded, it defaults the selected cast to the first one in the list received from the back-end API. It then gets the last 15min worth of data for the selected cast.
 
 Changing the selected cast will not automatically reload the data; you must then press the Refresh button.
 
@@ -51,7 +63,7 @@ The actual HTML that is served is located in the public folder.
 
 ## New Data Event
 
-When data is sent by a device a notification appears in the UI notifying the user. This is achieved using a third party channel service called Pusher. When the back-end receives new data, it publishes a "new-data" event to pusher and this UI is subscribed to such new-data events via the `channel.bind` statement in App's constructor.
+When data is sent by a device, a notification appears in the UI notifying the user. This is achieved using a third party channel service called [Pusher](https://www.pusher.com). When the back-end receives new data, it publishes a "new-data" event to pusher and this UI is subscribed to such new-data events via the `channel.bind` statement in App's constructor.
 
 ## Ideas For Future Development
 
