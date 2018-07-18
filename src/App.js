@@ -15,7 +15,7 @@ Moment.locale('en');
 momentLocalizer();
 simpleNumberLocalizer();
 
-let getApiRoot = '/api/';
+const getApiRoot = process.env.REACT_APP_CB_API_ROOT;
 
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
@@ -376,7 +376,7 @@ function getCasts() {
 
 function getDefaultCast() {
   let casts = getCasts();
-  return casts[casts.length-1];
+  return casts[0];
 }
 
 function parseMessage(data) {
